@@ -2,8 +2,6 @@ package telran.UI.model;
 
 import java.awt.*;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
@@ -11,20 +9,13 @@ import javax.swing.text.DefaultCaret;
 public class ChatClientUI extends JFrame {
 
 	private static final long serialVersionUID = 1162127549588214876L;
-	private JTextArea chatArea;
-	private static JTextField inputField;
-
-	private String nickName;
-
-	ObjectOutputStream oos;
-	ObjectInputStream ois;
-
+	JTextArea chatArea;
+	JTextField inputField;
+	String nickName;
 	JButton sendButton;
 
-	public ChatClientUI(ObjectOutputStream oos, ObjectInputStream ois, String nickName) throws IOException {
+	public ChatClientUI(String nickName) throws IOException {
 		super("Java 47 Chat");
-		this.oos = oos;
-		this.ois = ois;
 		this.nickName = nickName;
 
 		// Set up the UI components

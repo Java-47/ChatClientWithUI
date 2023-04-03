@@ -32,7 +32,7 @@ public class ChatClientAppl {
 		try (Socket socket = new Socket(SERVER_HOST, PORT);){
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-			ChatClientUI clientUI = new ChatClientUI(oos, ois, userName);
+			ChatClientUI clientUI = new ChatClientUI(userName);
 			//Sender
 			Sender sender = new Sender(clientUI, oos);
 			Thread senderThread = new Thread(sender);
