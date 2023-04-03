@@ -31,8 +31,7 @@ public class ChatClientAppl {
 
 	public static void main(String[] args) {
 		new ChatClientAppl();
-		try {
-			Socket socket = new Socket(SERVER_HOST, PORT);
+		try (Socket socket = new Socket(SERVER_HOST, PORT);){
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 			ChatClientUI clientUI = new ChatClientUI(oos, ois, userName);
@@ -44,7 +43,13 @@ public class ChatClientAppl {
 			Receiver receiver = new Receiver(clientUI, ois);
 			Thread receiverThread = new Thread(receiver);
 			receiverThread.start();
+			senderThread.join();
+			receiverThread.join();
+			
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
