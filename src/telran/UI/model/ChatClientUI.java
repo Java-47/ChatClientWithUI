@@ -8,9 +8,6 @@ import java.io.ObjectOutputStream;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 
-import telran.chat.client.task.Receiver;
-import telran.chat.client.task.Sender;
-
 public class ChatClientUI extends JFrame {
 
 	private static final long serialVersionUID = 1162127549588214876L;
@@ -29,7 +26,6 @@ public class ChatClientUI extends JFrame {
 		this.oos = oos;
 		this.ois = ois;
 		this.nickName = nickName;
-
 
 		// Set up the UI components
 		chatArea = new JTextArea();
@@ -51,17 +47,9 @@ public class ChatClientUI extends JFrame {
 		setSize(400, 300);
 		setLocationRelativeTo(null);
 		setVisible(true);
-		//прокрутка чата вниз при получении сообщений
+		// прокрутка чата вниз при получении сообщений
 		DefaultCaret caret = (DefaultCaret) chatArea.getCaret(); //
-		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE); 
-		//Sender
-		Sender sender = new Sender(this, oos);
-		Thread senderThread = new Thread(sender);
-		senderThread.start();
-		//Receiver
-		Receiver receiver = new Receiver(this, ois);
-		Thread receiverThread = new Thread(receiver);
-		receiverThread.start();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 	}
 

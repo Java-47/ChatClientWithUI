@@ -10,6 +10,8 @@ import java.net.Socket;
 import javax.swing.JOptionPane;
 
 import telran.UI.model.ChatClientUI;
+import telran.chat.client.task.Receiver;
+import telran.chat.client.task.Sender;
 
 public class ChatClientAppl {
 	private static final String SERVER_HOST = "127.0.0.1";
@@ -33,7 +35,15 @@ public class ChatClientAppl {
 			Socket socket = new Socket(SERVER_HOST, PORT);
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-			new ChatClientUI(oos, ois, userName);
+			ChatClientUI clientUI = new ChatClientUI(oos, ois, userName);
+			//Sender
+			Sender sender = new Sender(clientUI, oos);
+			Thread senderThread = new Thread(sender);
+			senderThread.start();
+			//Receiver
+			Receiver receiver = new Receiver(clientUI, ois);
+			Thread receiverThread = new Thread(receiver);
+			receiverThread.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
