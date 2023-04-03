@@ -18,12 +18,14 @@ public class ChatClientAppl {
 	private static String userName;
 
 	public ChatClientAppl() {
+		//Окно ввода ник нейма
 		ChatClientAppl.userName = JOptionPane.showInputDialog(null, "Enter you nick name", "Enter",
 				JOptionPane.PLAIN_MESSAGE);
 		if (ChatClientAppl.userName == null || ChatClientAppl.userName.isEmpty()) {
 			System.exit(0); // если пользователь не ввел имя или отменил ввод, выходим из приложения
 		}
 	}
+
 
 	public static void main(String[] args) {
 		new ChatClientAppl();

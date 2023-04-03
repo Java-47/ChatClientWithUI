@@ -1,17 +1,15 @@
 package telran.UI.model;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.time.LocalTime;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 
 import telran.chat.client.task.Receiver;
 import telran.chat.client.task.Sender;
-import telran.chat.model.Message;
 
 public class ChatClientUI extends JFrame {
 
@@ -19,7 +17,7 @@ public class ChatClientUI extends JFrame {
 	private JTextArea chatArea;
 	private static JTextField inputField;
 
-	private static String nickName;
+	private String nickName;
 
 	ObjectOutputStream oos;
 	ObjectInputStream ois;
@@ -30,15 +28,14 @@ public class ChatClientUI extends JFrame {
 		super("Java 47 Chat");
 		this.oos = oos;
 		this.ois = ois;
-		this.setNickName(nickName);
+		this.nickName = nickName;
+
 
 		// Set up the UI components
 		chatArea = new JTextArea();
 		chatArea.setEditable(false);
 		JScrollPane chatScrollPane = new JScrollPane(chatArea);
-
 		inputField = new JTextField(30);
-
 		sendButton = new JButton("Send");
 
 		// Set up the layout of the UI
@@ -54,19 +51,21 @@ public class ChatClientUI extends JFrame {
 		setSize(400, 300);
 		setLocationRelativeTo(null);
 		setVisible(true);
-
-
-		Sender sender = new Sender(this, oos, ois);
+		//прокрутка чата вниз при получении сообщений
+		DefaultCaret caret = (DefaultCaret) chatArea.getCaret(); //
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE); 
+		//Sender
+		Sender sender = new Sender(this, oos);
 		Thread senderThread = new Thread(sender);
 		senderThread.start();
-		
-//		Receiver receiver = new Receiver(this, oos, ois);
-//		Thread receiverThread = new Thread(receiver);
-//		receiverThread.start();
+		//Receiver
+		Receiver receiver = new Receiver(this, ois);
+		Thread receiverThread = new Thread(receiver);
+		receiverThread.start();
 
 	}
 
-	public static String getNickName() {
+	public String getNickName() {
 		return nickName;
 	}
 
@@ -79,14 +78,9 @@ public class ChatClientUI extends JFrame {
 		return sendButton;
 	}
 
-	public static JTextField getInputField() {
+	public JTextField getInputField() {
 
 		return inputField;
-	}
-
-	public ObjectOutputStream getOos() {
-		// TODO Auto-generated method stub
-		return oos;
 	}
 
 	public JTextArea getChatArea() {

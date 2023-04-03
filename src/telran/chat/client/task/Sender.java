@@ -3,7 +3,6 @@ package telran.chat.client.task;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalTime;
 
@@ -12,14 +11,13 @@ import telran.chat.model.Message;
 
 public class Sender implements Runnable {
 
-	private ChatClientUI chatClientUI;
-	private ObjectOutputStream oos;
-	ObjectInputStream ois;
+	ChatClientUI chatClientUI;
+	ObjectOutputStream oos;
 
-	public Sender(ChatClientUI chatClientUI, ObjectOutputStream oos, ObjectInputStream ois) {
+	public Sender(ChatClientUI chatClientUI, ObjectOutputStream oos) {
 		this.chatClientUI = chatClientUI;
 		this.oos = oos;
-		this.ois = ois;
+
 	}
 
 	@Override
@@ -27,24 +25,25 @@ public class Sender implements Runnable {
 		chatClientUI.getSendButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String input = ChatClientUI.getInputField().getText();
-					ChatClientUI.getInputField().setText("");
-					Message messageObj = new Message(ChatClientUI.getNickName(), input);
+					String input = chatClientUI.getInputField().getText();
+					chatClientUI.getInputField().setText("");
+					Message messageObj = new Message(chatClientUI.getNickName(), input);
 					messageObj.setTime(LocalTime.now());
 					oos.writeObject(messageObj);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-			}});
-		
-			ChatClientUI.getInputField().addActionListener(new ActionListener() {
+			}
+		});
+
+		chatClientUI.getInputField().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String input = ChatClientUI.getInputField().getText();
-					ChatClientUI.getInputField().setText("");
-					Message messageObj = new Message(ChatClientUI.getNickName(), input);
+					String input = chatClientUI.getInputField().getText();
+					chatClientUI.getInputField().setText("");
+					Message messageObj = new Message(chatClientUI.getNickName(), input);
 					messageObj.setTime(LocalTime.now());
-					chatClientUI.getOos().writeObject(messageObj);
+					oos.writeObject(messageObj);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -52,14 +51,6 @@ public class Sender implements Runnable {
 
 		});
 
-		while (true) {
-			try {
-				Message messageObj = (Message) ois.readObject();
-				chatClientUI.getChatArea().append(messageObj.toString() + "\n");
-			} catch (IOException | ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 }
